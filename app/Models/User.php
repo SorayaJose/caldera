@@ -23,8 +23,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'rol',
+        'rol'
     ];
+
+    //public $modo = 'S';
 
     /**
      * The attributes that should be hidden for serialization.

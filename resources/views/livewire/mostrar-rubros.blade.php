@@ -17,7 +17,7 @@
                     <span>registros</span>
                 </div>
                 <x-text-input id="search" class="block flex-1 mx-4" type="text" wire:model="search" 
-                    :value="old('search')" placeholder="Ingrese el texto a buscar" />    
+                    placeholder="Ingrese el texto a buscar" />    
             </div>
         </div>
 
@@ -28,9 +28,52 @@
                     <tr class="text-gray-600 text-left bg-gray-150">
                         <th class="cursor-pointer text-gray-900 font-semibold text-sm uppercase px-6 py-4"
                             wire:click="order('nombre')">
-                            Rubro
+                            Concepto
                             {{-- sort --}}
                             @if ($sort == 'nombre')
+                                @if ($direction == 'asc')
+                                    <i class="fa-solid fa-arrow-up-wide-short float-right mt-1"></i> 
+                                @else
+                                    <i class="fa-solid fa-arrow-down-wide-short float-right mt-1"></i> 
+                                @endif
+                            @else
+                                <i class="fa-solid fa-sort float-right mt-1"></i> 
+                            @endif
+                        </th>
+                        <th class="cursor-pointer text-center text-gray-900 font-semibold text-sm uppercase px-6 py-4"
+                        wire:click="order('moneda')">
+                            Moneda
+                            {{-- sort --}}
+                            @if ($sort == 'moneda')
+                                @if ($direction == 'asc')
+                                    <i class="fa-solid fa-arrow-up-wide-short float-right mt-1"></i> 
+                                @else
+                                    <i class="fa-solid fa-arrow-down-wide-short float-right mt-1"></i> 
+                                @endif
+                            @else
+                                <i class="fa-solid fa-sort float-right mt-1"></i> 
+                            @endif
+                        </th>
+                        <th class="cursor-pointer text-gray-900 font-semibold text-sm uppercase px-6 py-4"
+                        wire:click="order('banco_id')">
+                            Banco
+                            {{-- sort --}}           
+                            @if ($sort == 'banco_id')
+                                @if ($direction == 'asc')
+                                    <i class="fa-solid fa-arrow-up-wide-short float-right mt-1"></i> 
+                                @else
+                                    <i class="fa-solid fa-arrow-down-wide-short float-right mt-1"></i> 
+                                @endif
+                            @else
+                                <i class="fa-solid fa-sort float-right mt-1"></i> 
+                            @endif         
+                        </th>                        
+
+                        <th class="cursor-pointer text-gray-900 font-semibold text-sm uppercase px-6 py-4"
+                        wire:click="order('color')">
+                            Forma de pago
+                            {{-- sort --}}
+                            @if ($sort == 'color')
                                 @if ($direction == 'asc')
                                     <i class="fa-solid fa-arrow-up-wide-short float-right mt-1"></i> 
                                 @else
@@ -50,7 +93,28 @@
                         <tr>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-800">
-                                    <h2 class="text-xl">{{ $rubro->nombre }}</h2>
+                                    {{ $rubro->nombre }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="text-sm text-gray-800">
+                                    {{ $rubro->moneda }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="text-sm text-gray-800">
+                                    {{ $rubro->muestroNombreBanco()}}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-800">
+                                    @if ($rubro->color == 1)
+                                        <h2 class="text-l">{{ $rubro->mostrarColor() }}</h2>
+                                    @elseif ($rubro->color == 2)
+                                        <h2 class="text-l text-red-700">{{ $rubro->mostrarColor() }}</h2>
+                                    @else 
+                                        <h2 class="text-l text-blue-700">{{ $rubro->mostrarColor() }}</h2>
+                                    @endif
                                 </div>
                             </td>
                             <td class="py-4 text-right">
@@ -83,7 +147,7 @@
             </div>
         @else
             @if ($readyToLoad)
-                <div class="px-8 py-4">No hay rubros a mostrar</div>
+                <div class="px-8 py-4">No hay conceptos a mostrar</div>
             @else
                 <div class="flex justify-center h-14">
                     <img src="{{ asset('progress.gif')}}" alt="Cargando">

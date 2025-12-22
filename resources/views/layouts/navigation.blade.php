@@ -5,27 +5,55 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('socios.index') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                    </a>
+                    @auth   
+                        @if (cache('modoSivezul') == 'S')
+                            <a href="{{ route('home') }}">
+                                <h1 class="text-4xl">
+                                    <span class=" text-sky-800 font-extrabold">Sivezul</span>
+                                </h1>
+                                <!-- <x-application-logo class="block h-9 w-auto fill-current text-sky-800 dark:text-gray-200" />-->
+                            </a>
+                        @else
+                            <a href="{{ route('home') }}">
+                                <h1 class="text-4xl">
+                                    <span class=" text-pink-800 font-extrabold">Personal</span>
+                                </h1>
+                            </a>
+                        @endif
+                    @endauth
+
                 </div>
 
                 @auth                                   
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-nav-link :href="route('socios.index')" :active="request()->routeIs('socios.index')">
-                            Socios
+                        <x-nav-link :href="route('vencimientos.index')" :active="request()->routeIs('vencimientos.index')">
+                            Vencimientos
                         </x-nav-link>
-                        <x-nav-link :href="route('locales.index')" :active="request()->routeIs('locales.index')">
-                            Locales
+
+                        <x-nav-link :href="route('dolares.index')" :active="request()->routeIs('dolares.index')">
+                            Cotizaciones
                         </x-nav-link>
-                        <x-nav-link :href="route('recibos.index')" :active="request()->routeIs('recibos.index')">
-                            Recibos
+                        
+                        <x-nav-link :href="route('rubros.index')" :active="request()->routeIs('rubros.index')">
+                            Conceptos
                         </x-nav-link>
+                        
+                        <x-nav-link :href="route('cuentas.index')" :active="request()->routeIs('bancos.index')">
+                            Cuentas
+                        </x-nav-link>
+
+                        
+                        <!--
                         <x-nav-link :href="route('gastos.index')" :active="request()->routeIs('gastos.index')">
                             Gastos
                         </x-nav-link>
+                        <x-nav-link :href="route('socios.index')" :active="request()->routeIs('socios.index')">
+                            Socios
+                        </x-nav-link>
+                         -->
                     </div>
+                    <!--
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <x-dropdown >
                             <x-slot name="trigger">
@@ -47,50 +75,18 @@
                             </x-slot>
                         </x-dropdown>
                     </div>
+                    -->
+                    <!--
                     <div class="hidden space-x-8 sm:-my-px sm:ml-4 sm:flex">
-                        <x-nav-link :href="route('convenios.index')" :active="request()->routeIs('convenios.index')">
-                            Convenios
-                        </x-nav-link>
+
                         <x-nav-link :href="route('apartamentos.index')" :active="request()->routeIs('apartamentos.index')">
                             Apartamentos
                         </x-nav-link>
-                        <x-nav-link :href="route('personas.index')" :active="request()->routeIs('personas.index')">
-                            Personas
-                        </x-nav-link>
                     </div>
+                     -->
+                     
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
-                        @auth                            
-                            <x-dropdown align="right" width="48">
-                                <x-slot name="trigger">
-                                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                        <div>Varios</div>
-        
-                                        <div class="ml-1">
-                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </button>
-                                </x-slot>
-        
-                                <x-slot name="content">
-                                    <x-dropdown-link :href="route('apartamentos.index')">
-                                        Crear recibos
-                                    </x-dropdown-link>   
-                                    <x-dropdown-link :href="route('parametros.index')">
-                                        Parámetros
-                                    </x-dropdown-link>
-                                    {{-- <x-dropdown-link>
-                                        Tipo de Convenios
-                                    </x-dropdown-link>  --}} 
-                                    <x-dropdown-link :href="route('rubros.index')">
-                                        Rubros
-                                    </x-dropdown-link>       
-                                    <x-dropdown-link :href="route('items.index')">
-                                        Items en recibos
-                                    </x-dropdown-link>                                   </x-slot>
-                            </x-dropdown>
-                        @endauth
+
         
                         @guest                   
                             <!-- Navigation Links -->
@@ -113,44 +109,46 @@
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 @auth
-                    @can('create', App\Models\Vacante::class)
-                        <a href="{{ route('notificaciones') }}" 
-                        class="mr-2 w-7 h-7 bg-indigo-600 hover:bg-indigo-800 rounded-full flex flex-col 
-                        justify-center items-center text-sm font-extrabold text-white">
-                            {{ Auth::user()->unreadNotifications->count() }}
-                        </a>
-                    @endcan
-                    
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                <div>{{ Auth::user()->name }}</div>
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                            <div>{{ Auth::user()->name }}</div>
 
-                                <div class="ml-1">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </button>
-                        </x-slot>
+                            <div class="ml-1">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                    </x-slot>
 
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Perfil') }}
+                    <x-slot name="content">
+                        <x-dropdown-link :href="route('profile.edit')">
+                            {{ __('Perfil') }}
+                        </x-dropdown-link>
+
+                        <!-- Authentication -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Cerrar sesión') }}
                             </x-dropdown-link>
+                        </form>
+                    </x-slot>
+                </x-dropdown>
 
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-
-                                <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                    this.closest('form').submit();">
-                                    {{ __('Cerrar sesión') }}
-                                </x-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-dropdown>
+                @if (cache('modoSivezul') == 'S')
+                        <a href="{{ route('home.cambioModo') }}" class="bg-sky-800 py-3 px-4 text-center rounded-lg text-white text-xs font-extrabold uppercase">
+                            Sivezul
+                        </a> 
+                    @else
+                        <a href="{{ route('home.cambioModo') }}" class="bg-pink-800 py-3 px-4 text-center rounded-lg text-white text-xs font-extrabold uppercase">
+                            Personal
+                        </a> 
+                    @endif
                 @endauth
 
                 @guest                   
@@ -160,11 +158,13 @@
                             {{ __('Iniciar session') }}
                         </x-nav-link>
                     </div>
+                    <!-- 
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('register')">
                             Crear cuenta
                         </x-nav-link>
                     </div>
+                    -->
                 @endguest 
             </div>
 
@@ -238,11 +238,12 @@
                 <x-responsive-nav-link :href="route('login')">
                     {{ __('Login') }}
                 </x-responsive-nav-link>
+                <!--
                 <div class="pt-2 pb-3 space-y-1">
                     <x-responsive-nav-link :href="route('register')">
                         Crear cuenta
                     </x-responsive-nav-link>
-                </div>
+                </div>-->
             </div>
         @endguest
     </div>

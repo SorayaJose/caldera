@@ -15,14 +15,9 @@ return new class extends Migration
     {
         Schema::create('parametros', function (Blueprint $table) {
             $table->id();
-            $table->double('ipc', 6, 2);
-            $table->double('ur', 6, 2);
-            $table->double('ur_anterior', 6, 2);
-            $table->double('dorm_1', 6, 2)->nullable();
-            $table->double('dorm_2', 6, 2)->nullable();
-            $table->double('dorm_3', 6, 2)->nullable();
-            $table->double('dorm_4', 6, 2)->nullable();
-            $table->double('dorm_5', 6, 2)->nullable();
+            $table->double('brou', 6, 2);
+            $table->double('bevsa_compra', 6, 2);
+            $table->double('bevsa_venta', 6, 2);
             $table->timestamps();
         });
     }

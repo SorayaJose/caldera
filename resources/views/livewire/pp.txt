@@ -1,0 +1,586 @@
+
+
+    <div class="flex w-full mb-3 p-4 bg-white rounded-lg shadow-md">
+
+        <div class="w-full bg-white">
+            <p class="w-full text-center mt-4 text-gray-900 font-semibold text-sm uppercase">Vencimientos a pagar<br></p>
+            <p class="w-full text-center m-2 text-gray-900 text-sm">Mueva debajo de cada banco cada uno de los vencimientos</p>
+
+
+            {{-- 
+            <div class="w-11/12  float-right bg-red-200 overflow-hidden shadow-sm sm:rounded-lg">
+                fdsgdgdsf
+            </div>   
+            --}}
+
+
+            @if (count($vencimientos))
+                <!-- Table -->
+                <table class='mx-auto max-w-5xl w-full float-right rounded-lg bg-white '>
+                    <thead class="">
+                        <tr class="text-gray-600">
+                            <th class="cursor-pointer text-left text-gray-900 font-semibold text-sm uppercase px-6 py-4  w-1/5 ">
+                                Fecha
+                            </th>
+                            <th class="cursor-pointer text-gray-900 text-left font-semibold text-sm uppercase px-6 py-4  w-1/5 ">
+                                Concepto
+                            </th>
+
+                            <th class="text-gray-900 text-right w-1/5 font-semibold text-sm uppercase px-6 py-4">
+                                Importe $
+                            </th>
+                            <th class="text-gray-900 text-right w-1/5 font-semibold text-sm uppercase px-6 py-4">
+                                Importe U$S
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        @foreach ($vencimientos as $vencimiento)
+                            <tr class="bg-gray-100 mb-5 mt-5 border-b border-gray-200">
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-800 text-left">
+                                        {{ $vencimiento->mostrarFecha() }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-800">
+                                        <p class="font-semibold">{{ $vencimiento->rubro->nombre }}</p>
+                                        {{ $vencimiento->concepto }} {{$vencimiento->id}}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-800 text-right">
+                                        @if ($vencimiento->moneda == '$')
+                                            {{ $vencimiento->mostrar()}}
+                                        @else
+                                            -
+                                        @endif           
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="text-sm text-gray-800 float-right">
+                                        @if ($vencimiento->moneda == 'U$S')
+                                            {{ $vencimiento->mostrar()}}
+                                        @else
+                                        -
+                                        @endif           
+                                    </div>      
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+    
+
+    
+
+        @if (count($bancos))
+        @else
+            @if ($readyToLoad)
+                <div class="px-8 py-4">No hay bancos a mostrar</div>
+            @else
+                <div class="flex justify-center h-14">
+                    <img src="{{ asset('progress.gif')}}" alt="Cargando">
+                </div>
+            @endif          
+        @endif
+    </div>
+</div>
+{{-- 
+<div class="flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="flex items-center justify-center w-12 bg-emerald-500">
+        <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z" />
+        </svg>
+    </div>
+
+    <div class="px-4 py-2 -mx-3">
+        <div class="mx-3">
+            <span class="font-semibold text-emerald-500 dark:text-emerald-400">Success</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">Your account was registered!</p>
+        </div>
+    </div>
+</div>
+
+<div class="flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="flex items-center justify-center w-12 bg-blue-500">
+        <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM21.6667 28.3333H18.3334V25H21.6667V28.3333ZM21.6667 21.6666H18.3334V11.6666H21.6667V21.6666Z" />
+        </svg>
+    </div>
+
+    <div class="px-4 py-2 -mx-3">
+        <div class="mx-3">
+            <span class="font-semibold text-blue-500 dark:text-blue-400">Info</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">This channel archived by the owner!</p>
+        </div>
+    </div>
+</div>
+
+<div class="flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div class="flex items-center justify-center w-12 bg-red-500">
+        <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z" />
+        </svg>
+    </div>
+
+    <div class="px-4 py-2 -mx-3">
+        <div class="mx-3">
+            <span class="font-semibold text-red-500 dark:text-red-400">Error</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">
+                Your email is already used!
+            </p>
+            <span class="font-semibold text-red-500 dark:text-red-400">Error</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">
+                Your email is already used!
+            </p>
+            <span class="font-semibold text-red-500 dark:text-red-400">Error</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">
+                Your email is already used!
+            </p>
+            <span class="font-semibold text-red-500 dark:text-red-400">Error</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">
+                Your email is already used!
+            </p>
+            <span class="font-semibold text-red-500 dark:text-red-400">Error</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">
+                Your email is already used!
+            </p>
+            <span class="font-semibold text-red-500 dark:text-red-400">Error</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">
+                Your email is already used!
+            </p>
+            <span class="font-semibold text-red-500 dark:text-red-400">Error</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">
+                Your email is already used!
+            </p>
+            <span class="font-semibold text-red-500 dark:text-red-400">Error</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">
+                Your email is already used!
+            </p>
+            <span class="font-semibold text-red-500 dark:text-red-400">Error</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">
+                Your email is already used!
+            </p>
+            <span class="font-semibold text-red-500 dark:text-red-400">Error</span>
+            <p class="text-sm text-gray-600 dark:text-gray-200">
+                Your email is already used!
+            </p>
+        </div>
+    </div>
+</div>
+--}}
+
+
+
+
+@push('scripts')
+    <script>
+        let root= document.querySelector('[drag-root]')
+        root.querySelectorAll('[drag-item]').forEach(el => {
+            el.addEventListener('dragstart', e  => {
+                e.target.setAttribute('dragging', true)
+            })
+
+            el.addEventListener('drop', e  => {
+                e.target.classList.remove('bg-yellow-100')
+                // buscar el elemento origen
+                let draggingEl = root.querySelector('[dragging]')
+                
+                e.currentTarget.before(draggingEl)
+/*                
+                let component = Livewire.find(
+                    e.target.closest('[wire\\:id]'.getAttribute('wire:id'))
+                ) //target
+
+                let orderIds = Array.from(root.querySelectorAll('[drag-item]')).map(
+                    itemEl => itemEl.getAttribute('drag-item'))
+
+                component.call('reorder', orderIds)
+            */
+           })
+
+            el.addEventListener('dragenter', e  => {
+                e.target.classList.add('bg-yellow-100')
+                e.preventDefault()
+            })
+
+            el.addEventListener('dragover', e  => {
+                e.preventDefault()
+            })
+            el.addEventListener('dragleave', e  => {
+                e.target.classList.remove('bg-yellow-100')
+            })
+            el.addEventListener('dragend', e  => {
+                e.target.removeAttribute('dragging')
+            })
+        })
+    </script>
+@endpush
+
+
+////////////////////////
+<?php
+
+namespace App\Http\Livewire;
+
+use App\Models\Banco;
+use App\Models\Vencimiento;
+use Livewire\Component;
+use Livewire\WithPagination;
+
+class MostrarBancosVtos extends Component
+{
+    //protected $listeners = ['eliminarDolar'];
+    public $search;
+    public $sort = "fecha";
+    public $direction = "desc";
+    public $cantidad = 10;
+    public $readyToLoad = false;
+    public $open = false;
+
+    public $cosas = [
+        ['id' => 1, 'nombre' => 'uno'],
+        ['id' => 2, 'nombre' => 'dos'],
+        ['id' => 3, 'nombre' => 'tres'],
+        ['id' => 4, 'nombre' => 'cuatro'],
+        ['id' => 5, 'nombre' => 'cinco']
+    ];
+
+    protected $listeners = ['actualizarOrden'];
+
+    protected $queryString = [
+        'cantidad' => ['except' => 10]
+    ];
+    use WithPagination;
+
+    public function reorder ($orderedIds) {
+        dd($orderedIds);
+    }
+
+    public function actualizarOrden($nuevoOrden) {
+        dd($nuevoOrden);
+    }
+
+    public function render()
+    {    
+        $tipo = cache('modoSivezul');
+        if($this->readyToLoad) {
+            $bancos = Banco::where('tipo', $tipo)
+            //->orwhere('moneda', $this->search)
+            //->orderBy($this->sort, $this->direction)
+            ->paginate($this->cantidad);
+            $vencimientos = Vencimiento::where('tipo', $tipo)
+            ->paginate($this->cantidad);
+            //var_dump($bancos);
+        } else {
+            $bancos = [];
+            $vencimientos = [];
+        }
+
+        return view('livewire.mostrar-bancos-vtos', compact('bancos'), compact('vencimientos'));   
+    }
+
+    public function loadRegistros() {
+        $this->readyToLoad = true;
+    }
+
+    public function order($sort) {
+        if ($this->sort == $sort) {
+            if ($this->direction == "desc") {
+                $this->direction = "asc";
+            } else {
+                $this->direction = "desc";
+            }
+        } else {
+            $this->sort = $sort;
+            $this->direction = "asc";
+        }
+    }
+}
+
+<div wire:init="loadRegistros">
+
+    @if (count($bancos))
+        @foreach ($bancos as $banco)
+            <div class="flex w-full mb-3 overflow-hidden bg-white rounded-lg shadow-md">
+                @if ($banco->saldo() > 0)
+                    <div class="flex items-center justify-center w-12 bg-emerald-500">
+                        <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z" />
+                        </svg>
+                    </div>
+                @else
+                    <div class="flex items-center justify-center w-12 bg-red-500">
+                        <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z" />
+                        </svg>
+                    </div>
+                @endif
+            
+                <div class="px-4 py-2 w-4/5">
+                    <div class="mx-3">
+                        <p class="text-sm text-gray-600">
+                            <span class="font-bold text-2xl  text-gray-800">
+                                {{$banco->nombre}}
+                                <p class="text-xl text-gray-800">en {{$banco->moneda}} - Nro Cuenta: {{$banco->numero}}</p>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="px-4 py-2 w-1/5">
+                    <div class="mx-3 text-right">
+                        <span class="font-bold text-2xl  text-red-600">
+                            {{$banco->mostrarSaldo()}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endif
+
+
+
+
+    <div class="flex w-full mb-3 p-4 bg-white rounded-lg shadow-md">
+
+        <div class="w-full bg-white">
+            <p class="w-full text-center mt-4 text-gray-900 font-semibold text-sm uppercase">Vencimientos a pagar<br></p>
+            <p class="w-full text-center m-2 text-gray-900 text-sm">Mueva debajo de cada banco cada uno de los vencimientos</p>
+
+
+            {{-- 
+            <div class="w-11/12  float-right bg-red-200 overflow-hidden shadow-sm sm:rounded-lg">
+                fdsgdgdsf
+            </div>   
+            --}}
+
+
+            @if (count($vencimientos))
+                <!-- Table -->
+                <table class='mx-auto max-w-5xl w-full float-right rounded-lg bg-white '>
+                    <thead class="">
+                        <tr class="text-gray-600">
+                            <th class="cursor-pointer text-left text-gray-900 font-semibold text-sm uppercase px-6 py-4  w-1/5 ">
+                                Fecha
+                            </th>
+                            <th class="cursor-pointer text-gray-900 text-left font-semibold text-sm uppercase px-6 py-4  w-1/5 ">
+                                Concepto
+                            </th>
+
+                            <th class="text-gray-900 text-right w-1/5 font-semibold text-sm uppercase px-6 py-4">
+                                Importe $
+                            </th>
+                            <th class="text-gray-900 text-right w-1/5 font-semibold text-sm uppercase px-6 py-4">
+                                Importe U$S
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        @foreach ($vencimientos as $vencimiento)
+                            <tr class="bg-gray-100 mb-5 mt-5 border-b border-gray-200">
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-800 text-left">
+                                        {{ $vencimiento->mostrarFecha() }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-800">
+                                        <p class="font-semibold">{{ $vencimiento->rubro->nombre }}</p>
+                                        {{ $vencimiento->concepto }} {{$vencimiento->id}}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-800 text-right">
+                                        @if ($vencimiento->moneda == '$')
+                                            {{ $vencimiento->mostrar()}}
+                                        @else
+                                            -
+                                        @endif           
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="text-sm text-gray-800 float-right">
+                                        @if ($vencimiento->moneda == 'U$S')
+                                            {{ $vencimiento->mostrar()}}
+                                        @else
+                                        -
+                                        @endif           
+                                    </div>      
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+    
+
+    
+
+        @if (count($bancos))
+        @else
+            @if ($readyToLoad)
+                <div class="px-8 py-4">No hay bancos a mostrar</div>
+            @else
+                <div class="flex justify-center h-14">
+                    <img src="{{ asset('progress.gif')}}" alt="Cargando">
+                </div>
+            @endif          
+        @endif
+    </div>
+</div>
+
+<div>
+    <ul drag-root wire:ignore class="overflow-hidden rounded shadow divide-y">
+        @foreach ($cosas as $cosa)
+            <li drag-item={{ $cosa['id'] }} draggable=true wire:key="{{$cosa['id']}}" class="w-64 p-4">
+                {{$cosa['nombre']}}
+            </li>
+        @endforeach
+    </ul>
+</div>
+
+
+@push('scripts')
+    <script>let root = document.querySelector('[drag-root]')
+        root.querySelectorAll('[drag-item]').forEach(el => {
+            el.addEventListener('dragstart', e  => {
+                e.target.setAttribute('dragging', true)
+            })
+        
+            el.addEventListener('drop', e => {
+                e.currentTarget.classList.remove('bg-yellow-100');
+                let draggingEl = root.querySelector('[dragging]');
+                
+                if (draggingEl && draggingEl !== e.currentTarget) {
+                    e.currentTarget.before(draggingEl);
+                    
+                    // Obtener el nuevo orden
+                    const nuevoOrden = Array.from(root.querySelectorAll('[drag-item]')).map(el => el.getAttribute('wire:key'));
+                    
+                    // Llamar a Livewire
+                    Livewire.emit('actualizarOrden', nuevoOrden);
+                }
+            });
+        
+            el.addEventListener('dragenter', e  => {
+                e.currentTarget.classList.add('bg-yellow-100')
+                e.preventDefault()
+            })
+        
+            el.addEventListener('dragover', e  => {
+                e.preventDefault()
+            })
+            
+            el.addEventListener('dragleave', e  => {
+                e.currentTarget.classList.remove('bg-yellow-100')
+            })
+        
+            el.addEventListener('dragend', e  => {
+                e.target.removeAttribute('dragging')
+            })
+        })
+        </script>
+@endpush
+
+
+
+@if (count($vencimientos))
+<!-- Table -->
+<table class='mx-auto max-w-5xl w-full float-right rounded-lg bg-white '>
+    <thead class="">
+        <tr class="text-gray-600">
+            <th class="cursor-pointer text-left text-gray-900 font-semibold text-sm uppercase px-6 py-4  w-1/5 ">
+                Fecha
+            </th>
+            <th class="cursor-pointer text-gray-900 text-left font-semibold text-sm uppercase px-6 py-4  w-1/5 ">
+                Concepto
+            </th>
+
+            <th class="text-gray-900 text-right w-1/5 font-semibold text-sm uppercase px-6 py-4">
+                Importe $
+            </th>
+            <th class="text-gray-900 text-right w-1/5 font-semibold text-sm uppercase px-6 py-4">
+                Importe U$S
+            </th>
+        </tr>
+    </thead>
+    <tbody class="bg-white">
+        @foreach ($vencimientos as $vencimiento)
+            <tr class="bg-gray-100 mb-5 mt-5 border-b border-gray-200">
+                <td class="px-6 py-4">
+                    <div class="text-sm text-gray-800 text-left">
+                        {{ $vencimiento->mostrarFecha() }}
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="text-sm text-gray-800">
+                        <p class="font-semibold">{{ $vencimiento->rubro->nombre }}</p>
+                        {{ $vencimiento->concepto }} {{$vencimiento->id}}
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="text-sm text-gray-800 text-right">
+                        @if ($vencimiento->moneda == '$')
+                            {{ $vencimiento->mostrar()}}
+                        @else
+                            -
+                        @endif           
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-right">
+                    <div class="text-sm text-gray-800 float-right">
+                        @if ($vencimiento->moneda == 'U$S')
+                            {{ $vencimiento->mostrar()}}
+                        @else
+                        -
+                        @endif           
+                    </div>      
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+@endif
+
+
+
+
+
+
+
+<div class="flex w-full mb-3 p-4 bg-white rounded-lg shadow-md">
+
+<div class="w-full bg-white">
+    <p class="w-full text-center mt-4 text-gray-900 font-semibold text-sm uppercase">Vencimientos a pagar<br></p>
+    <p class="w-full text-center m-2 text-gray-900 text-sm">Mueva debajo de cada banco cada uno de los vencimientos</p>
+
+
+    {{-- 
+    <div class="w-11/12  float-right bg-red-200 overflow-hidden shadow-sm sm:rounded-lg">
+        fdsgdgdsf
+    </div>   
+    --}}
+
+
+
+</div>
+
+
+
+
+@if (count($bancos))
+@else
+    @if ($readyToLoad)
+        <div class="px-8 py-4">No hay bancos a mostrar</div>
+    @else
+        <div class="flex justify-center h-14">
+            <img src="{{ asset('progress.gif')}}" alt="Cargando">
+        </div>
+    @endif          
+@endif
+</div>

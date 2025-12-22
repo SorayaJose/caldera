@@ -29,6 +29,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $valor = cache('modoSivezul', 'S');
+        cache(['modoSivezul' => 'S'], 30000000);
+        //dd($valor);
+
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

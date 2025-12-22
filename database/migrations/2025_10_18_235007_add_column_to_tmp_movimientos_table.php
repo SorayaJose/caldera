@@ -13,9 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('rubros', function (Blueprint $table) {
-            $table->Integer('cantidad')->default(0);
+        /*
+        Schema::table('tmp_movimientos', function (Blueprint $table) {
+            $table->foreignId('vencimiento_id')
+            ->nullable()
+            ->constrained('vencimientos')
+            ->nullOnDelete();
         });
+        */
     }
 
     /**
@@ -25,8 +30,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('rubros', function (Blueprint $table) {
-            $table->dropColumn('cantidad');
+        /*
+        Schema::table('tmp_movimientos', function (Blueprint $table) {
+            $table->dropColumn('vencimiento_id');
         });
+        */
     }
 };

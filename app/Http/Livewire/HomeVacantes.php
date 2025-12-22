@@ -23,6 +23,7 @@ class HomeVacantes extends Component
     public function render()
     {
         //$vacantes = Vacante::all();
+        dd('estoy en homeVacantes');
 
         $vacantes = Vacante::when($this->termino, function($query) {
             $query->where('titulo', 'LIKE', "%". $this->termino. "%");

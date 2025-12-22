@@ -16,9 +16,11 @@ return new class extends Migration
         Schema::create('rubros', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->boolean('mostrar')->default(true);
-            $table->enum('moneda', ['$', 'UR'])->default('$');
-            $table->boolean('todos')->default(true);
+            //$table->boolean('mostrar')->default(true);
+            $table->enum('moneda', ['$', 'U$S'])->default('$');
+            $table->enum('tipo', ['P', 'S'])->default('S');
+            $table->tinyInteger('color')->default(0);
+            //$table->boolean('todos')->default(true);
             $table->timestamps();
         });
     }

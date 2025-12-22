@@ -2,13 +2,17 @@
 
 use App\Models\TipoConvenio;
 use App\Http\Livewire\Mostrar;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\BancoController;
+use App\Http\Controllers\DolarController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\LocalController;
 use App\Http\Controllers\RubroController;
 use App\Http\Controllers\SocioController;
+use App\Http\Controllers\CuentaController;
 use App\Http\Controllers\ReciboController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\ProfileController;
@@ -17,8 +21,11 @@ use App\Http\Controllers\ConvenioController;
 use App\Http\Controllers\ParametroController;
 use App\Http\Controllers\CandidatosController;
 use App\Http\Controllers\ApartamentoController;
+use App\Http\Controllers\VencimientoController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\TipoConvenioController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,13 +38,16 @@ use App\Http\Controllers\TipoConvenioController;
 |
 */
 
-Route::get('/', HomeController::class)->name('home');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', HomeController::class)->name('home');
+});
 
-/*
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-*/
+Route::get('/cambioModo', [HomeController::class, 'cambioModo'])->middleware(['auth', 'verified'])->name('home.cambioModo');
+
+Route::get('/dolares', [DolarController::class, 'index'])->middleware(['auth', 'verified'])->name('dolares.index');
+Route::get('/dolares/create', [DolarController::class, 'create'])->middleware(['auth', 'verified'])->name('dolares.create');
+Route::get('/dolares/{dolar}', [DolarController::class, 'show'])->name('dolares.show');
+Route::get('/dolares/{dolar}/edit', [DolarController::class, 'edit'])->middleware(['auth', 'verified'])->name('dolares.edit');
 
 Route::get('/dashboard', [VacanteController::class, 'index'])->middleware(['auth', 'verified', 'rol.reclutador'])->name('vacantes.index');
 Route::get('/vacantes/create', [VacanteController::class, 'create'])->middleware(['auth', 'verified'])->name('vacantes.create');
@@ -54,7 +64,7 @@ Route::get('/apartamentos/{apartamento}/edit', [ApartamentoController::class, 'e
 Route::get('/recibos', [ReciboController::class, 'index'])->middleware(['auth', 'verified'])->name('recibos.index');
 Route::get('/recibos/create', [ReciboController::class, 'create'])->middleware(['auth', 'verified'])->name('recibos.create');
 Route::get('/recibos/{recibo}', [ReciboController::class, 'show'])->name('recibos.show');
-//Route::get('/recibos/{recibo}/edit', [ReciboController::class, 'edit'])->middleware(['auth', 'verified'])->name('personas.edit');
+//Route::get('/recibos/{recibo}/edit', [ReciboController::class, 'edit'])->middleware(['auth', 'verified'])->name('dolares.edit');
 
 Route::get('/gastos', [GastoController::class, 'index'])->middleware(['auth', 'verified'])->name('gastos.index');
 Route::get('/gastos/create', [GastoController::class, 'create'])->middleware(['auth', 'verified'])->name('gastos.create');
@@ -62,10 +72,10 @@ Route::get('/gastos/createIna', [GastoController::class, 'createIna'])->middlewa
 Route::get('/gastos/{gasto}', [GastoController::class, 'show'])->name('gastos.show');
 Route::get('/gastos/{gasto}/edit', [GastoController::class, 'edit'])->middleware(['auth', 'verified'])->name('gastos.edit');
 
-Route::get('/personas', [PersonaController::class, 'index'])->middleware(['auth', 'verified'])->name('personas.index');
-Route::get('/personas/create', [PersonaController::class, 'create'])->middleware(['auth', 'verified'])->name('personas.create');
-Route::get('/personas/{persona}', [PersonaController::class, 'show'])->name('personas.show');
-Route::get('/personas/{persona}/edit', [PersonaController::class, 'edit'])->middleware(['auth', 'verified'])->name('personas.edit');
+Route::get('/dolares', [DolarController::class, 'index'])->middleware(['auth', 'verified'])->name('dolares.index');
+Route::get('/dolares/create', [DolarController::class, 'create'])->middleware(['auth', 'verified'])->name('dolares.create');
+Route::get('/dolares/{dolar}', [DolarController::class, 'show'])->name('dolares.show');
+Route::get('/dolares/{dolar}/edit', [DolarController::class, 'edit'])->middleware(['auth', 'verified'])->name('dolares.edit');
 
 Route::get('/convenios', [ConvenioController::class, 'index'])->middleware(['auth', 'verified'])->name('convenios.index');
 Route::get('/convenios/{convenio}', [ConvenioController::class, 'show'])->name('convenios.show');
@@ -86,6 +96,18 @@ Route::get('/rubros', [RubroController::class, 'index'])->middleware(['auth', 'v
 Route::get('/rubros/create', [RubroController::class, 'create'])->middleware(['auth', 'verified'])->name('rubros.create');
 Route::get('/rubros/{rubro}', [RubroController::class, 'show'])->name('rubros.show');
 Route::get('/rubros/{rubro}/edit', [RubroController::class, 'edit'])->middleware(['auth', 'verified'])->name('rubros.edit');
+
+Route::get('/vencimientos', [VencimientoController::class, 'index'])->middleware(['auth', 'verified'])->name('vencimientos.index');
+Route::get('/vencimientos/create', [VencimientoController::class, 'create'])->middleware(['auth', 'verified'])->name('vencimientos.create');
+Route::get('/vencimientos/{vencimiento}', [VencimientoController::class, 'show'])->name('vencimientos.show');
+Route::get('/vencimientos/{vencimiento}/edit', [VencimientoController::class, 'edit'])->middleware(['auth', 'verified'])->name('vencimientos.edit');
+
+
+Route::get('/cuentas', [CuentaController::class, 'index'])->middleware(['auth', 'verified'])->name('cuentas.index');
+Route::get('/cuentas/create', [CuentaController::class, 'create'])->middleware(['auth', 'verified'])->name('cuentas.create');
+Route::get('/cuentas/{cuenta}', [CuentaController::class, 'show'])->name('cuentas.show');
+Route::get('/cuentas/{cuenta}/edit', [CuentaController::class, 'edit'])->middleware(['auth', 'verified'])->name('cuentas.edit');
+Route::put('/actualizar/{id}', [CuentaController::class, 'actualizarValor'])->name('actualizar.valor');
 
 Route::get('/items', [ItemController::class, 'index'])->middleware(['auth', 'verified'])->name('items.index');
 Route::get('/items/create', [ItemController::class, 'create'])->middleware(['auth', 'verified'])->name('items.create');

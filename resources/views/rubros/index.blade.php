@@ -4,7 +4,7 @@
             <div class="px-2 py-2 w-full flex items-center  justify-between">
                 <div class="justify-right">
                     <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                        Rubros
+                        Conceptos
                     </h1>
                 </div>
                 <div class="justify-right">
@@ -16,7 +16,7 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
              @if (session()->has('mensaje'))
 

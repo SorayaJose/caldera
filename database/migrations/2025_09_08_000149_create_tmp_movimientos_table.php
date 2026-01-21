@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('tmp_movimientos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('mov_id');
+            //$table->unsignedBigInteger('mov_id');
             $table->enum('mov_tipo', ['M', 'V'])->default('M');
             $table->enum('moneda', ['$', 'U$S'])->default('$');
             $table->double('importe', 12, 2)->default(0);

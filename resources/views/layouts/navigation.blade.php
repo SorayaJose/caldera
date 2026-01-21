@@ -1,250 +1,139 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+<nav
+  x-data="{ open: false, scrolled: false }"
+  x-init="window.addEventListener('scroll', () => scrolled = window.scrollY > 10)"
+  :class="scrolled ? 'shadow-md' : ''"
+  class="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 transition-shadow duration-300"
+>
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+            <!-- Left -->
+            <div class="flex items-center">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    @auth   
-                        @if (cache('modoSivezul') == 'S')
-                            <a href="{{ route('home') }}">
-                                <h1 class="text-4xl">
-                                    <span class=" text-sky-800 font-extrabold">Sivezul</span>
-                                </h1>
-                                <!-- <x-application-logo class="block h-9 w-auto fill-current text-sky-800 dark:text-gray-200" />-->
-                            </a>
-                        @else
-                            <a href="{{ route('home') }}">
-                                <h1 class="text-4xl">
-                                    <span class=" text-pink-800 font-extrabold">Personal</span>
-                                </h1>
-                            </a>
-                        @endif
+                    @auth
+                        <a href="{{ route('home') }}">
+                            <h1 class="text-2xl sm:text-4xl font-extrabold
+                                {{ cache('modoSivezul') == 'S' ? 'text-sky-800' : 'text-pink-800' }}">
+                                {{ cache('modoSivezul') == 'S' ? 'Sivezul' : 'Personal' }}
+                            </h1>
+                        </a>
                     @endauth
-
                 </div>
 
-                @auth                                   
-                    <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-nav-link :href="route('vencimientos.index')" :active="request()->routeIs('vencimientos.index')">
-                            Vencimientos
-                        </x-nav-link>
+                <!-- Desktop Links -->
+                @auth
+                <div class="hidden sm:flex space-x-8 sm:ml-10">
+                    <x-nav-link :href="route('vencimientos.index')" :active="request()->routeIs('vencimientos.index')">
+                        Vencimientos
+                    </x-nav-link>
 
-                        <x-nav-link :href="route('dolares.index')" :active="request()->routeIs('dolares.index')">
-                            Cotizaciones
-                        </x-nav-link>
-                        
-                        <x-nav-link :href="route('rubros.index')" :active="request()->routeIs('rubros.index')">
-                            Conceptos
-                        </x-nav-link>
-                        
-                        <x-nav-link :href="route('cuentas.index')" :active="request()->routeIs('bancos.index')">
-                            Cuentas
-                        </x-nav-link>
+                    <x-nav-link :href="route('movimientos.index')" :active="request()->routeIs('movimientos.index')">
+                        Movimientos
+                    </x-nav-link>
+                    
+                    <x-nav-link :href="route('dolares.index')" :active="request()->routeIs('dolares.index')">
+                        Cotizaciones
+                    </x-nav-link>
 
-                        
-                        <!--
-                        <x-nav-link :href="route('gastos.index')" :active="request()->routeIs('gastos.index')">
-                            Gastos
-                        </x-nav-link>
-                        <x-nav-link :href="route('socios.index')" :active="request()->routeIs('socios.index')">
-                            Socios
-                        </x-nav-link>
-                         -->
-                    </div>
-                    <!--
-                    <div class="hidden sm:flex sm:items-center sm:ml-6">
-                        <x-dropdown >
-                            <x-slot name="trigger">
-                                <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                    <div>Reportes</div>
-    
-                                    <div class="ml-1">
-                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </button>
-                            </x-slot>
-    
-                            <x-slot name="content">
-                                <x-dropdown-link :href="route('apartamentos.index')">
-                                    Reporte 1
-                                </x-dropdown-link>         
-                            </x-slot>
-                        </x-dropdown>
-                    </div>
-                    -->
-                    <!--
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-4 sm:flex">
+                    <x-nav-link :href="route('rubros.index')" :active="request()->routeIs('rubros.index')">
+                        Conceptos
+                    </x-nav-link>
 
-                        <x-nav-link :href="route('apartamentos.index')" :active="request()->routeIs('apartamentos.index')">
-                            Apartamentos
-                        </x-nav-link>
-                    </div>
-                     -->
-                     
-                    <div class="hidden sm:flex sm:items-center sm:ml-6">
-
-        
-                        @guest                   
-                            <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <x-nav-link :href="route('login')">
-                                    {{ __('Iniciar session') }}
-                                </x-nav-link>
-                            </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <x-nav-link :href="route('register')">
-                                    Crear cuenta
-                                </x-nav-link>
-                            </div>
-                        @endguest 
-                    </div>
-        
+                    <x-nav-link :href="route('cuentas.index')" :active="request()->routeIs('cuentas.index')">
+                        Cuentas
+                    </x-nav-link>
+                </div>
                 @endauth
             </div>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ml-6">
+            <!-- Right Desktop -->
+            <div class="hidden sm:flex sm:items-center sm:ml-6 gap-3">
                 @auth
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ml-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md
+                                text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800
+                                hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition">
+                                {{ Auth::user()->name }}
+                                <svg class="ml-1 h-4 w-4 fill-current" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293L10 12l4.707-4.707"
+                                          clip-rule="evenodd"/>
                                 </svg>
-                            </div>
-                        </button>
-                    </x-slot>
+                            </button>
+                        </x-slot>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Perfil') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Cerrar sesión') }}
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('profile.edit')">
+                                Perfil
                             </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
 
-                @if (cache('modoSivezul') == 'S')
-                        <a href="{{ route('home.cambioModo') }}" class="bg-sky-800 py-3 px-4 text-center rounded-lg text-white text-xs font-extrabold uppercase">
-                            Sivezul
-                        </a> 
-                    @else
-                        <a href="{{ route('home.cambioModo') }}" class="bg-pink-800 py-3 px-4 text-center rounded-lg text-white text-xs font-extrabold uppercase">
-                            Personal
-                        </a> 
-                    @endif
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
+                                    Cerrar sesión
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+
+                    <a href="{{ route('home.cambioModo') }}"
+                       class="px-4 py-2 rounded-lg text-xs font-extrabold uppercase text-white
+                       {{ cache('modoSivezul') == 'S' ? 'bg-sky-800' : 'bg-pink-800' }}">
+                        {{ cache('modoSivezul') == 'S' ? 'Sivezul' : 'Personal' }}
+                    </a>
                 @endauth
-
-                @guest                   
-                    <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-nav-link :href="route('login')">
-                            {{ __('Iniciar session') }}
-                        </x-nav-link>
-                    </div>
-                    <!-- 
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-nav-link :href="route('register')">
-                            Crear cuenta
-                        </x-nav-link>
-                    </div>
-                    -->
-                @endguest 
             </div>
 
             <!-- Hamburger -->
-            <div class="-mr-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <div class="flex items-center sm:hidden">
+                <button @click="open = !open"
+                        class="p-2 rounded-md text-gray-400 hover:bg-gray-100 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path :class="{ 'hidden': open }" stroke-linecap="round"
+                              stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 12h16M4 18h16"/>
+                        <path :class="{ 'hidden': !open }" stroke-linecap="round"
+                              stroke-linejoin="round" stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <!-- Mobile Menu -->
+    <div x-show="open" class="sm:hidden bg-white dark:bg-gray-800 border-t">
         @auth
-            <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('vacantes.index')" :active="request()->routeIs('vacantes.index')">
-                    {{ __('Mis vacantes') }}
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('vencimientos.index')">Vencimientos</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('dolares.index')">Cotizaciones</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('rubros.index')">Conceptos</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('movimientos.index')">Movimientos</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('cuentas.index')">Cuentas</x-responsive-nav-link>
+        </div>
+
+        <div class="border-t pt-4 pb-2">
+            <div class="px-4 text-sm text-gray-600">
+                {{ Auth::user()->name }}<br>
+                {{ Auth::user()->email }}
+            </div>
+
+            <div class="mt-3 space-y-1">
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    Perfil
                 </x-responsive-nav-link>
-                <div class="pt-2 pb-3 space-y-1">
-                    <x-responsive-nav-link :href="route('vacantes.create')" :active="request()->routeIs('vacantes.create')">
-                        Crear vacante
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <x-responsive-nav-link :href="route('logout')"
+                        onclick="event.preventDefault(); this.closest('form').submit();">
+                        Cerrar sesión
                     </x-responsive-nav-link>
-                </div>
-
-                @if (auth()->user()->rol === 2) 
-                    <div class="flex gap-2 items-center p-3">
-                        <a href="{{ route('notificaciones') }}" 
-                        class="w-7 h-7 bg-indigo-600 hover:bg-indigo-800 rounded-full flex flex-col 
-                        justify-center items-center text-sm font-extrabold text-white">
-                            {{ Auth::user()->unreadNotifications->count() }}
-                        </a>
-                        <p class="text-base font-medium text-gray-600">
-                            @choice('Notificacion|Notificaciones', Auth::user()->unreadNotifications->count())
-                        </p>
-                    </div>
-                @endif
+                </form>
             </div>
-
-            <!-- Responsive Settings Options -->
-            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-                <div class="px-4">
-                    <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                </div>
-
-                <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('profile.edit')">
-                        {{ __('Perfil') }}
-                    </x-responsive-nav-link>
-
-                    <!-- Authentication -->
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-
-                        <x-responsive-nav-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                            this.closest('form').submit();">
-                            {{ __('Cerrar sesión') }}
-                        </x-responsive-nav-link>
-                    </form>
-                </div>
-            </div>
+        </div>
         @endauth
-
-        @guest
-            <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('login')">
-                    {{ __('Login') }}
-                </x-responsive-nav-link>
-                <!--
-                <div class="pt-2 pb-3 space-y-1">
-                    <x-responsive-nav-link :href="route('register')">
-                        Crear cuenta
-                    </x-responsive-nav-link>
-                </div>-->
-            </div>
-        @endguest
     </div>
 </nav>

@@ -4,14 +4,14 @@
         <p class="text-xs">Los vencimientos son debes a pagar en un futuro.</p>
     </div>
     <div class="w-3/4 md:justify-center">
-        <form wire:submit.prevent='crearVencimiento' class="w-full space-y-5">
+        <form wire:submit.prevent='editarVencimiento' class="w-full space-y-5">
             <div>
                 <x-input-label for="fecha" :value="__('Fecha de pago')" />
                 <x-text-input id="fecha" class="block mt-1 w-full" type="date" wire:model="fecha" 
-                :value="old('fecha')" placeholder="Fecha de pago" />
+                placeholder="Fecha de pago" />
                 <x-input-error :messages="$errors->get('fecha')" class="mt-2" />
             </div>
-
+            
             <div  class="form-group">
                 <x-input-label for="rubro" :value="__('Concepto a pagar')" />   
                  <select wire:model="rubro" name="rubro" id="rubro"
@@ -25,12 +25,12 @@
             
                 <x-input-error :messages="$errors->get('rubro')" class="mt-2" />
             </div>
-            
+
             {{-- 
             <div>
                 <x-input-label for="concepto" :value="__('Comentario')" />
                 <x-text-input id="concepto" class="block mt-1 w-full" type="text" wire:model="concepto" 
-                :value="old('concepto')" placeholder="Ingrese un texto significativo del pago" />
+                placeholder="Ingrese un texto significativo del pago" />
                 @error('concepto')
                     <livewire:mostrar-alerta :message="$message" ></livewire:mostrar-alerta>        
                 @enderror
@@ -55,40 +55,20 @@
             <div>
                 <x-input-label for="importe" :value="__('Importe a pagar')" />
                 <x-text-input id="importe" class="block mt-1 w-full" type="text" wire:model="importe" 
-                :value="old('importe')" placeholder="Ingrese el importe a pagar" />
+                placeholder="Ingrese el importe a pagar" />
                 @error('importe')
                     <livewire:mostrar-alerta :message="$message" ></livewire:mostrar-alerta>        
                 @enderror
             </div>
-            
-            <div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input
-                        type="checkbox"
-                        name="activo"
-                        value="1"
-                        class="sr-only peer"
-                        {{ old('activo', $item->activo ?? false) ? 'checked' : '' }}
-                    >
-                    <div
-                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
-                               peer-focus:ring-blue-300 rounded-full peer
-                               peer-checked:bg-blue-600
-                               after:content-[''] after:absolute after:top-[2px] after:left-[2px]
-                               after:bg-white after:border-gray-300 after:border after:rounded-full
-                               after:h-5 after:w-5 after:transition-all
-                               peer-checked:after:translate-x-full">
-                    </div>
-                    <span class="ml-3 text-sm text-gray-700">Ingresar pago ahora?</span>
-                </label>
-                
-                
-            </div>
+
             <div class="flex justify-end my-2">
                 <x-primary-button class="w-full justify-center">
-                    {{ __('Crear vencimiento') }}
+                    {{ __('Editar vencimiento') }}
                 </x-primary-button>
             </div>
         </form>
     </div>
 </div>
+
+
+

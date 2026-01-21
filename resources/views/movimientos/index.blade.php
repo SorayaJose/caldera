@@ -4,19 +4,19 @@
             <div class="px-2 py-2 w-full flex items-center  justify-between">
                 <div class="justify-right">
                     <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                        Tipo de convenios
+                        Movimientos
                     </h1>
                 </div>
-                <div class="justify-right bg-slate-600">
-                    <a href="{{ route('tipoConvenios.create') }}" class="bg-green-800 py-3 px-4 text-center rounded-lg text-white text-xs font-extrabold uppercase">
+                <div class="justify-right">
+                    <a href="{{ route('movimientos.create') }}" class="bg-green-800 py-3 px-4 text-center rounded-lg text-white text-xs font-extrabold uppercase">
                         Nuevo
-                    </a> 
+                    </a>  
                 </div>    
             </div>
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
              @if (session()->has('mensaje'))
 
@@ -28,8 +28,7 @@
 
             @endif
 
-            estoy en el index de tipos de convenios
-            @livewire('mostrar-tiposconvenios')
+            @livewire('mostrar-movimientos')
         </div>
     </div>
 </x-app-layout>

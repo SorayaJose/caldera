@@ -2,15 +2,15 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Movimiento;
 use Livewire\Component;
-use App\Models\TipoConvenio;
 use Livewire\WithPagination;
 
-class MostrarTipoConvenios extends Component
+class MostrarMovimientos extends Component
 {
-    protected $listeners = ['eliminarTipoConvenios'];
+    protected $listeners = ['eliminarMovimiento'];
     public $search;
-    public $sort = "nombre";
+    public $sort = "fecha";
     public $direction = "asc";
     public $cantidad = 10;
     public $readyToLoad = false;
@@ -21,23 +21,28 @@ class MostrarTipoConvenios extends Component
     ];
     use WithPagination;
 
-    public function eliminarRubro(TipoConvenio $tipoConvenio) {
-        $tipoConvenio->delete();
-        //dd($rubro);
+    public function eliminarMovimiento(Movimiento $movimiento) {
+        $movimiento->delete();
+        //dd($movimiento);
     }
  
     public function render()
     {
+        $tipo = cache('modoSivezul');
         if($this->readyToLoad) {
-            $tipoConvenio = TipoConvenio::where('nombre', 'like', '%' . $this->search . '%')
+            $movimientos = Movimiento::
+            where('tipo', $tipo)
+            //->orwhere('dormitorios', $this->search)
             ->orderBy($this->sort, $this->direction)
             ->paginate($this->cantidad);
         } else {
-            $tipoConvenio = [];
+            $movimientos = [];
         }
 
-        return view('livewire.mostrar-tipoconvenios', compact('tipoConvenio'));
+        
+        return view('livewire.mostrar-movimientos', compact('movimientos'));
         // ->layout('layouts.base')
+        
     }
 
     public function loadRegistros() {
@@ -58,4 +63,3 @@ class MostrarTipoConvenios extends Component
         }
     }
 }
-

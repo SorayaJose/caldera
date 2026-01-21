@@ -12,7 +12,6 @@ class TmpMovimiento extends Model
     use HasFactory;
 
     protected $fillable = [
-        'mov_id',
         'mov_tipo',
         'moneda',
         'importe',

@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\DB;
 
 class MostrarBancosVtos extends Component
 {
-    protected $listeners = ['moverCosaABanco', 'resetear', 'sacarMovimiento', 'sacarVencimiento', 'agregarComentario'];
+    protected $listeners = ['moverCosaABanco', 'resetear', 'sacarMovimiento', 
+                'sacarVencimiento', 'agregarComentario', 'confirmarMovimiento, 
+                confirmarVencimiento'];
     public $search;
     public $sort = "fecha";
     public $direction = "desc";
@@ -44,7 +46,7 @@ class MostrarBancosVtos extends Component
             $this->moneda = '$';
         }
 
-        //dd('Origen: ' . $this->origen . 'Destino: ' . $this->destino . ' Moneda:' . $this->moneda . ' Importe:' . $this->importe);
+       // dump('Origen: ' . $this->origen . 'Destino: ' . $this->destino . ' Moneda:' . $this->moneda . ' Importe:' . $this->importe);
 
         if ($this->importe != null) {
             TmpMovimiento::create([
@@ -54,7 +56,8 @@ class MostrarBancosVtos extends Component
                 'tipo' => cache('modoSivezul'),
                 'cuenta_id' => $this->origen,
                 'destino' => $this->destino,
-                'fecha' => now(),
+                'comentario' => '',
+                'fecha' => now()
             ]);
 
 
@@ -63,25 +66,33 @@ class MostrarBancosVtos extends Component
             //dd($cuenta);
             $nuevo_saldo = $cuenta->saldo_tmp;
 
+            //dump('saldo origen : ' . $nuevo_saldo);
+
             if ($cuenta->moneda == '$') {
                 if ($this->moneda == '$') {
-                    $nuevo_saldo += $this->importe;
+                    $nuevo_saldo -= $this->importe;
                 } else {
-                    $nuevo_saldo += $this->pasoAPesos($this->importe);
+                    $nuevo_saldo -= $this->pasoAPesos($this->importe);
                 }
             } else {
                 if ($this->moneda == '$') {
-                    $nuevo_saldo += $this->pasoADolares($this->importe);
+                    $nuevo_saldo -= $this->pasoADolares($this->importe);
                 } else {
-                    $nuevo_saldo += $this->importe;
+                    $nuevo_saldo -= $this->importe;
                 }
             }
+            //dump('saldo origen despues: ' . $nuevo_saldo);
+
             $cuenta->saldo_tmp = $nuevo_saldo;
             $cuenta->save();
 
             // calcular nuevo saldo de la cuenta
             $cuenta = Cuenta::find($this->destino);
             $nuevo_saldo = $cuenta->saldo_tmp;
+            $this->importe = abs($this->importe);
+
+            //dump('saldo destino : ' . $nuevo_saldo);
+            //dump('importe a mover : ' . $this->importe);
 
             if ($cuenta->moneda == '$') {
                 if ($this->moneda == '$') {
@@ -96,6 +107,7 @@ class MostrarBancosVtos extends Component
                     $nuevo_saldo += $this->importe;
                 }
             }
+            //dump('saldo destino : ' . $nuevo_saldo);
             $cuenta->saldo_tmp = $nuevo_saldo;
             $cuenta->save();
 
@@ -123,7 +135,6 @@ class MostrarBancosVtos extends Component
                 'fecha' => now(),
                 'comentario' => $this->comentario
             ]);
-
 
             // crear un mensaje
             session()->flash('mensaje', 'El comentario se agregó correctamente');
@@ -161,15 +172,15 @@ class MostrarBancosVtos extends Component
 
         if ($cuenta->moneda == '$') {
             if ($vencimiento->moneda == '$') {
-                $nuevo_saldo += $vencimiento->importe;
+                $nuevo_saldo -= $vencimiento->importe;
             } else {
-                $nuevo_saldo += $this->pasoAPesos($vencimiento->importe);
+                $nuevo_saldo -= $this->pasoAPesos($vencimiento->importe);
             }
         } else {
             if ($vencimiento->moneda == '$') {
-                $nuevo_saldo += $this->pasoADolares($vencimiento->importe);
+                $nuevo_saldo -= $this->pasoADolares($vencimiento->importe);
             } else {
-                $nuevo_saldo += $vencimiento->importe;
+                $nuevo_saldo -= $vencimiento->importe;
             }
         }
         $cuenta->saldo_tmp = $nuevo_saldo;
@@ -181,6 +192,14 @@ class MostrarBancosVtos extends Component
             'mensaje' => 'El vencimiento se movió correctamente.',
             'icono' => 'success'
         ]);
+    }
+
+    public function confirmarVencimiento($vencimiento_id) {
+        dd('entro en confirmar vencimiento ' . $vencimiento_id);
+    }
+
+    public function confirmarMovimiento($movimiento_id) {
+        dd('entro en confirmar movimiento ' . $movimiento_id);
     }
 
     public function sacarVencimiento($vencimiento_id) {
@@ -196,15 +215,15 @@ class MostrarBancosVtos extends Component
 
         if ($cuenta->moneda == '$') {
             if ($vencimiento->moneda == '$') {
-                $nuevo_saldo -= $vencimiento->importe;
+                $nuevo_saldo += $vencimiento->importe;
             } else {
-                $nuevo_saldo -= $this->pasoAPesos($vencimiento->importe);
+                $nuevo_saldo += $this->pasoAPesos($vencimiento->importe);
             }
         } else {
             if ($vencimiento->moneda == '$') {
-                $nuevo_saldo -= $this->pasoADolares($vencimiento->importe);
+                $nuevo_saldo += $this->pasoADolares($vencimiento->importe);
             } else {
-                $nuevo_saldo -= $vencimiento->importe;
+                $nuevo_saldo += $vencimiento->importe;
             }
         }
         $cuenta->saldo_tmp = $nuevo_saldo;
@@ -212,10 +231,65 @@ class MostrarBancosVtos extends Component
     }
 
     public function sacarMovimiento($id) {
-        //dd('entro en sacar vencimiento ' . $vencimiento_id);
+        //dd('entro en sacar vencimiento ' . $id);
         $mov = TmpMovimiento::find($id);
         if ($mov->mov_tipo == 'M') {
-            // arreglar el nuevo saldo
+            // eliminar un movimiento
+            // volver a agregar el saldo del importe del movimiento
+            //dump('Origen: ' . $this->origen . 'Destino: ' . $this->destino . ' Moneda:' . $this->moneda . ' Importe:' . $this->importe);
+
+            if ($mov->importe != null) {
+
+                // calcular nuevo saldo de la cuenta
+                $cuenta = Cuenta::find($mov->cuenta_id);
+                //dd($cuenta);
+                $nuevo_saldo = $cuenta->saldo_tmp;
+    
+                //dump('saldo origen : ' . $nuevo_saldo);
+    
+                if ($cuenta->moneda == '$') {
+                    if ($mov->moneda == '$') {
+                        $nuevo_saldo += $mov->importe;
+                    } else {
+                        $nuevo_saldo += $this->pasoAPesos($mov->importe);
+                    }
+                } else {
+                    if ($mov->moneda == '$') {
+                        $nuevo_saldo += $this->pasoADolares($mov->importe);
+                    } else {
+                        $nuevo_saldo += $mov->importe;
+                    }
+                }
+                //dump('saldo origen despues: ' . $nuevo_saldo);
+    
+                $cuenta->saldo_tmp = $nuevo_saldo;
+                $cuenta->save();
+    
+                // calcular nuevo saldo de la cuenta
+                $cuenta = Cuenta::find($mov->destino);
+                $nuevo_saldo = $cuenta->saldo_tmp;
+                $mov->importe = abs($mov->importe);
+    
+                //dump('saldo destino : ' . $nuevo_saldo);
+                //dump('importe a mover : ' . $this->importe);
+    
+                if ($cuenta->moneda == '$') {
+                    if ($mov->moneda == '$') {
+                        $nuevo_saldo -= $mov->importe;
+                    } else {
+                        $nuevo_saldo -= $this->pasoAPesos($mov->importe);
+                    }
+                } else {
+                    if ($this->moneda == '$') {
+                        $nuevo_saldo -= $this->pasoADolares($mov->importe);
+                    } else {
+                        $nuevo_saldo -= $mov->importe;
+                    }
+                }
+                //dump('saldo destino : ' . $nuevo_saldo);
+                $cuenta->saldo_tmp = $nuevo_saldo;
+                $cuenta->save();
+            }
         } 
         $mov->delete();
     }
@@ -275,11 +349,6 @@ class MostrarBancosVtos extends Component
                 ->orderBy('cuenta_id', 'asc')
                 ->paginate($this->cantidad);
                 
-            // Traer todos los movimientos
-            $movimientos = Movimiento::where('tipo', $tipo)
-                ->paginate($this->cantidad);
-            //var_dump($bancos);
-
             $tmp_movimientos = TmpMovimiento::where('tipo', $tipo)
             //->orwhere('moneda', $this->search)
             //->orderBy($this->sort, $this->direction)

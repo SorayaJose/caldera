@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\TipoConvenio;
+use App\Models\Movimiento;
 use App\Http\Livewire\Mostrar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -17,13 +17,12 @@ use App\Http\Controllers\ReciboController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacanteController;
-use App\Http\Controllers\ConvenioController;
 use App\Http\Controllers\ParametroController;
 use App\Http\Controllers\CandidatosController;
+use App\Http\Controllers\MovimientoController;
 use App\Http\Controllers\ApartamentoController;
 use App\Http\Controllers\VencimientoController;
 use App\Http\Controllers\NotificacionController;
-use App\Http\Controllers\TipoConvenioController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -77,11 +76,6 @@ Route::get('/dolares/create', [DolarController::class, 'create'])->middleware(['
 Route::get('/dolares/{dolar}', [DolarController::class, 'show'])->name('dolares.show');
 Route::get('/dolares/{dolar}/edit', [DolarController::class, 'edit'])->middleware(['auth', 'verified'])->name('dolares.edit');
 
-Route::get('/convenios', [ConvenioController::class, 'index'])->middleware(['auth', 'verified'])->name('convenios.index');
-Route::get('/convenios/{convenio}', [ConvenioController::class, 'show'])->name('convenios.show');
-Route::get('/convenios/{socio}/create', [ConvenioController::class, 'create'])->middleware(['auth', 'verified'])->name('convenios.create');
-Route::get('/convenios/{convenio}/edit', [ConvenioController::class, 'edit'])->middleware(['auth', 'verified'])->name('convenios.edit');
-
 Route::get('/socios', [SocioController::class, 'index'])->middleware(['auth', 'verified'])->name('socios.index');
 Route::get('/socios/create', [SocioController::class, 'create'])->middleware(['auth', 'verified'])->name('socios.create');
 Route::get('/socios/{socio}', [SocioController::class, 'show'])->name('socios.show');
@@ -102,6 +96,10 @@ Route::get('/vencimientos/create', [VencimientoController::class, 'create'])->mi
 Route::get('/vencimientos/{vencimiento}', [VencimientoController::class, 'show'])->name('vencimientos.show');
 Route::get('/vencimientos/{vencimiento}/edit', [VencimientoController::class, 'edit'])->middleware(['auth', 'verified'])->name('vencimientos.edit');
 
+Route::get('/movimientos', [MovimientoController::class, 'index'])->middleware(['auth', 'verified'])->name('movimientos.index');
+Route::get('/movimientos/create', [MovimientoController::class, 'create'])->middleware(['auth', 'verified'])->name('movimientos.create');
+Route::get('/movimientos/{movimiento}', [MovimientoController::class, 'show'])->name('movimientos.show');
+Route::get('/movimientos/{movimiento}/edit', [MovimientoController::class, 'edit'])->middleware(['auth', 'verified'])->name('movimientos.edit');
 
 Route::get('/cuentas', [CuentaController::class, 'index'])->middleware(['auth', 'verified'])->name('cuentas.index');
 Route::get('/cuentas/create', [CuentaController::class, 'create'])->middleware(['auth', 'verified'])->name('cuentas.create');
@@ -119,10 +117,6 @@ Route::get('/parametros', [ParametroController::class, 'index'])->middleware(['a
 //Route::get('/parametros/{parametro}', [ParametroController::class, 'show'])->name('parametros.show');
 Route::get('/parametros/{parametro}/edit', [ParametroController::class, 'edit'])->middleware(['auth', 'verified'])->name('parametros.edit');
 
-Route::get('/tipoConvenios', [TipoConvenioController::class, 'index'])->middleware(['auth', 'verified'])->name('tipoConvenios.index');
-Route::get('/tipoConvenios/create', [TipoConvenioController::class, 'create'])->middleware(['auth', 'verified'])->name('tipoConvenios.create');
-Route::get('/tipoConvenios/{rubro}', [TipoConvenioController::class, 'show'])->name('tipoConvenios.show');
-Route::get('/tipoConvenios/{rubro}/edit', [TipoConvenioController::class, 'edit'])->middleware(['auth', 'verified'])->name('tipoConvenios.edit');
 // Notificaciones
 Route::get('/notificaciones', [NotificacionController::class, 'mostrar'])->middleware(['auth', 'verified', 'rol.reclutador'])->name('notificaciones');
 

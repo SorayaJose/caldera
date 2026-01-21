@@ -3,3 +3,5 @@
 @tailwind utilities;
 
 /* @import "estilos.css"; */
+
+[x-cloak] { display: none !important; }

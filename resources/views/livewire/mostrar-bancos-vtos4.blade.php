@@ -30,9 +30,7 @@
                                     @foreach ($banco->cuentas as $cuenta)
                                         <div class="drop-zone w-1/2" data-banco-id="{{$cuenta->id}}">
                                             <p class="text-{{$cuenta->color()}}-800 pb-1 pt-2">{{ $cuenta->moneda }}</p>
-                                            <p class="text-{{$cuenta->color()}}-800 pb-5 pt-3 text-m font-bold">{{ number_format(($cuenta->saldo - $cuenta->saldo_tmp), 2, ',', '.') }}</p>
-                                            <!-- <p class="text-{{$cuenta->color()}}-800 pb-5 pt-3 text-sm">[{{$cuenta->id}}]{{ number_format($cuenta->saldo, 2, ',', '.') }}</p> -->
-                                            <!-- <p class="text-{{$cuenta->color()}}-800 pb-5 pt-3 text-sm">[{{$cuenta->id}}]{{ number_format($cuenta->saldo_tmp, 2, ',', '.') }}</p> -->
+                                            <p class="text-{{$cuenta->color()}}-800 pb-5 pt-3 text-m font-bold">{{ number_format(($cuenta->saldo + $cuenta->saldo_tmp), 2, ',', '.') }}</p>
                                         </div>                                       
                                     @endforeach
                                 @endif
@@ -104,6 +102,20 @@
                                 <!-- Fecha: ocupa 1 de 6 -->
                                 <div class="col-span-4 text-left text-sm font-semibold rounded">
                                     <button
+                                    wire:click="$emit('confirmarMovimiento', {{ $mov->id }})" 
+                                    class="bg-green-600 py-2 px-2 text-center rounded-lg text-white text-xs font-bold uppercase">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            class="size-3"
+                                            fill="none"
+                                            stroke="white"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                        <path d="M5 13l4 4L19 7" />
+                                        </svg>                                                             
+                                    </button> 
+                                    <button
                                     wire:click="$emit('sacarMovimiento', {{ $mov->id }})" 
                                     class="bg-red-600 py-2 px-2 text-center rounded-lg text-white text-xs font-bold uppercase">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-3">
@@ -160,6 +172,20 @@
                                 <!-- Fecha: ocupa 1 de 6 -->
                                 <div class="col-span-4 text-left text-sm font-semibold rounded">
                                     <button
+                                    wire:click="$emit('confirmarVencimiento', {{ $vencimiento->id }})" 
+                                    class="bg-green-600 py-2 px-2 text-center rounded-lg text-white text-xs font-bold uppercase">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            class="size-3"
+                                            fill="none"
+                                            stroke="white"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                        <path d="M5 13l4 4L19 7" />
+                                        </svg>                                                             
+                                    </button>
+                                    <button
                                     wire:click="$emit('sacarVencimiento', {{ $vencimiento->id }})" 
                                     class="bg-red-600 py-2 px-2 text-center rounded-lg text-white text-xs font-bold uppercase">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-3">
@@ -183,11 +209,13 @@
         </div>
         <!-- Muestro los vencimientos -->
         <div class="col-span-1 bg-white p-3" id='vencimientos'>
-            <div>
+            <div class=" bg-white p-4 mt-1 rounded-lg border border-gray-300 shadow" id='temporales'> 
                 <h1 class="text-green-800 text-xl text-bold p-3">Próximos vencimientos</h1>
+                <p class="text-xs italic pb-2">Arrastra los vencimientos sobre la cuenta con la que se va a realizar el pago</p>
                 <ul drag-root class="bg-white overflow-hidden rounded divide-y">                
                     @foreach ($vencimientos as $vencimiento)
                         <li drag-item={{ $vencimiento['id'] }} draggable=true wire:key="{{$vencimiento['id']}}" class="">
+                            
                             <div class="grid grid-cols-6 items-center gap-2 py-3 
                             {{ $loop->odd ? 'bg-gray-50' : 'bg-white' }} 
                             text-{{ $vencimiento->rubro->color() }}-600">
@@ -291,5 +319,31 @@
     Livewire.hook('message.processed', () => {
         inicializarDragAndDrop();
     });
+
+    <script>
+        Livewire.on('confirmarMovimiento', movimientoId => {
+            Swal.fire({
+                title: "¿Confirmar el movimiento?",
+                text: "Un apartamento eliminado no se puede recuperar",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#1F2937",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Si, confirmar el moviento!",
+                cancelButtonText: 'Cancelar'
+                }).then((result) => {
+            if (result.isConfirmed) {
+                // eliminarla  el apartamento del  servidor
+                Livewire.emit('confirmarMovimiento', movimientoId)
+                Swal.fire({
+                    title: "Se confirmó el movimiento",
+                    text: "Eliminado correctamente.",
+                    icon: "success",
+                    confirmButtonColor: "#166534"
+                });
+            }
+            });
+        })
+    </script>
 </script>
 @endpush

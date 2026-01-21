@@ -25,7 +25,7 @@ class MostrarVencimientos extends Component
         $vencimiento->delete();
         //dd($vencimiento);
     }
- 
+
     public function render()
     {
         $tipo = cache('modoSivezul');

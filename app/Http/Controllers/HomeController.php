@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dolar;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Redirect;
 
 class HomeController extends Controller
 {
@@ -20,20 +18,24 @@ class HomeController extends Controller
      */
     public function __invoke(Request $request)
     {
-        //dd('dentro del invoke');
-        //$modo = Config::get('app.modo');
-        //if (Auth::check()) {
-            $dolar = Dolar::whereDate('fecha', '<=', Carbon::today())
-            ->orderBy('fecha', 'desc')
-            ->orderBy('id', 'desc')
-            ->first();
-            return view('home.index', [
-                'dolar' => $dolar
-            ]);           
-        //} else {
-        //    dd('sin login');
-        //}
+        /** @var User|null $user */
+        $user = Auth::user();
 
+        $puedeGestionar = $user && ($user->tienePermiso('medio') || (int) ($user->rol ?? 0) === User::ROL_ADMIN);
+
+        // Usuarios limitados siguen entrando directo a vencimientos
+        if ($user && !$puedeGestionar) {
+            return redirect()->route('vencimientos.index');
+        }
+
+        $dolar = Dolar::whereDate('fecha', '<=', Carbon::today())
+        ->orderBy('fecha', 'desc')
+        ->orderBy('id', 'desc')
+        ->first();
+        return view('home.index', [
+            'dolar' => $dolar,
+            'user' => $user,
+        ]);
     }
 
     public function cambioModo()
@@ -62,7 +64,7 @@ class HomeController extends Controller
         // guardar el registrossssss
         //$user->save();
         
-        return redirect::to('/');
+        return redirect()->to('/');
     }
     
 }

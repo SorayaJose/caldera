@@ -11,9 +11,16 @@
 |
 */
 
-$app = new Illuminate\Foundation\Application(
-    $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
-);
+$basePath = $_ENV['APP_BASE_PATH']
+    ?? $_SERVER['APP_BASE_PATH']
+    ?? getenv('APP_BASE_PATH')
+    ?? dirname(__DIR__);
+
+if (!is_string($basePath) || trim($basePath) === '') {
+    $basePath = dirname(__DIR__);
+}
+
+$app = new Illuminate\Foundation\Application($basePath);
 
 /*
 |--------------------------------------------------------------------------

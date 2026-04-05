@@ -1,5 +1,16 @@
 <div wire:init="loadRegistros" >
     @php use Illuminate\Support\Str; @endphp
+    @php
+        $iconosBanco = [
+            'HSBC' => 'hsbc.png',
+            'Scotiabank' => 'scotiabank.png',
+            'Santander' => 'santander.png',
+            'BROU' => 'brou.png',
+            'BBVA' => 'bbva.png',
+            'Itaú' => 'itau.png',
+            'Caja' => null,
+        ];
+    @endphp
     <div class="grid grid-cols-3 gap-4">
         <!-- Muestro las cuentas y sus saldos -->
         <div class="col-span-2 bg-white p-4 rounded-lg shadow">
@@ -13,7 +24,21 @@
                                 </svg>
                             </div>                    
                             <div class="w-full text-center border-b border-gray-200">
-                                <span class="font-bold text-gray-700 text-xl">{{$banco->nombre}}</span>
+                                @php
+                                    $iconoBanco = $iconosBanco[$banco->nombre] ?? null;
+                                @endphp
+                                @if($iconoBanco)
+                                    <img src="{{ asset($iconoBanco) }}" alt="{{ $banco->nombre }}" class="mx-auto h-9 w-9 object-contain" style="width:2.25rem;height:2.25rem;max-width:2.25rem;object-fit:contain;display:block;" />
+                                @elseif($banco->nombre === 'Caja')
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mx-auto h-9 w-9 text-gray-700" style="width:2.25rem;height:2.25rem;max-width:2.25rem;display:block;">
+                                        <path d="M2.273 5.625A4.483 4.483 0 0 1 5.25 4.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 3H5.25a3 3 0 0 0-2.977 2.625ZM2.273 8.625A4.483 4.483 0 0 1 5.25 7.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 6H5.25a3 3 0 0 0-2.977 2.625ZM5.25 9a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h13.5a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H15v1.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 10.5V9H5.25Z" />
+                                    </svg>
+                                @else
+                                    <span class="inline-flex items-center justify-center h-9 w-9 rounded-full bg-gray-100 text-xs font-bold text-gray-700 mx-auto" style="width:2.25rem;height:2.25rem;max-width:2.25rem;line-height:1;">{{ strtoupper(substr($banco->nombre,0,2)) }}</span>
+                                @endif
+                                <span class="block text-[10px] font-semibold leading-tight text-gray-600 mt-1 mb-2">
+                                    {{ $banco->nombre }}
+                                </span>
                             </div>
                             <div class="flex gap-2 border-b border-gray-200">
                                 @if (count($banco->cuentas))
